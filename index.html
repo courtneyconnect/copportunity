@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Copper Price: 30 Years of History & Outlook</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f172a;
+    color: #f1f5f9;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 24px 20px;
+  }
+  .container { max-width: 940px; margin: 0 auto; }
+  h1 {
+    font-size: 26px; font-weight: 800;
+    background: linear-gradient(135deg, #f97316, #f59e0b);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subtitle { color: #94a3b8; font-size: 14px; margin-top: 6px; }
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin: 24px 0;
+  }
+  .stat-card {
+    background: #1e293b; border-radius: 10px; padding: 14px 16px;
+    border: 1px solid #334155;
+  }
+  .stat-label { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+  .stat-value { font-size: 20px; font-weight: 700; color: #f97316; }
+  .stat-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .tabs {
+    display: flex; gap: 4px; background: #1e293b;
+    border-radius: 10px; padding: 4px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .tab {
+    flex: 1; padding: 10px 8px; border: none; border-radius: 8px;
+    cursor: pointer; font-size: 12px; font-weight: 600;
+    background: transparent; color: #94a3b8; transition: all 0.2s;
+    min-width: 100px;
+  }
+  .tab.active { background: #f97316; color: #fff; }
+  .tab:hover:not(.active) { background: #334155; }
+  .panel {
+    background: #1e293b; border-radius: 12px; padding: 24px;
+    border: 1px solid #334155;
+  }
+  .panel-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .panel-desc { color: #94a3b8; font-size: 13px; margin-bottom: 20px; }
+  .chart-wrap { position: relative; width: 100%; height: 420px; }
+  .hidden { display: none; }
+  .events-legend {
+    margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .event-tag {
+    font-size: 10px; color: #94a3b8; background: #0f172a;
+    padding: 4px 8px; border-radius: 6px; border: 1px solid #334155;
+  }
+  .event-tag b { color: #fbbf24; font-weight: 700; }
+  .era-grid {
+    margin-top: 20px; display: grid;
+    grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .era-card {
+    background: #0f172a; border-radius: 8px; padding: 12px 14px;
+    border-left: 3px solid var(--era-color);
+  }
+  .era-name { font-size: 13px; font-weight: 700; }
+  .era-years { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .era-desc { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+  .info-box {
+    margin-top: 20px; background: #0f172a; border-radius: 8px;
+    padding: 16px; border: 1px solid #334155;
+  }
+  .info-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+  .info-box p { font-size: 13px; color: #94a3b8; line-height: 1.7; }
+  .hl { color: #22c55e; font-weight: 600; }
+  .hl-o { color: #f97316; font-weight: 600; }
+  .hl-y { color: #fbbf24; font-weight: 600; }
+  .hl-r { color: #ef4444; font-weight: 600; }
+  .hl-c { color: #06b6d4; font-weight: 600; }
+  .hl-p { color: #a78bfa; font-weight: 600; }
+  .bar-section { margin-top: 10px; }
+  .bar-item { margin-bottom: 20px; }
+  .bar-header {
+    display: flex; justify-content: space-between; margin-bottom: 8px;
+  }
+  .bar-header span:first-child { font-size: 14px; font-weight: 600; }
+  .bar-track {
+    position: relative; height: 36px; background: #0f172a;
+    border-radius: 8px; overflow: hidden;
+  }
+  .bar-baseline {
+    position: absolute; top: 0; left: 0; height: 100%;
+    background: #475569; border-radius: 8px 0 0 8px;
+    display: flex; align-items: center; padding-left: 10px;
+    font-size: 11px; color: #94a3b8; font-weight: 600;
+  }
+  .bar-fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: flex-end; padding-right: 10px;
+    font-size: 12px; font-weight: 700;
+  }
+  .footer {
+    color: #475569; font-size: 11px; margin-top: 16px; text-align: center;
+  }
+  .zone-legend {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;
+  }
+  .zone-item {
+    display: flex; align-items: center; gap: 6px; font-size: 12px;
+  }
+  .zone-dot {
+    width: 12px; height: 12px; border-radius: 3px;
+  }
+  .forecast-cards {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 20px;
+  }
+  .forecast-card {
+    background: #0f172a; border-radius: 10px; padding: 16px;
+    border: 1px solid #334155; position: relative; overflow: hidden;
+  }
+  .forecast-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .forecast-card .period { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .forecast-card .range { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+  .forecast-card .detail { font-size: 12px; color: #94a3b8; line-height: 1.6; }
+  .supply-bar { margin-bottom: 16px; }
+  .supply-bar-label {
+    display: flex; justify-content: space-between; margin-bottom: 6px;
+    font-size: 12px;
+  }
+  .supply-bar-track {
+    height: 24px; background: #0f172a; border-radius: 6px;
+    overflow: hidden; position: relative;
+  }
+  .supply-bar-fill {
+    height: 100%; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+    transition: width 0.5s ease;
+  }
+  /* Explain Simply Button & Modal */
+  .explain-btn {
+    position: absolute; bottom: 16px; right: 16px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff; border: none; border-radius: 50px;
+    padding: 10px 18px; font-size: 13px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+    transition: all 0.2s; z-index: 10; display: flex; align-items: center; gap: 7px;
+  }
+  .explain-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(99,102,241,0.5); }
+  .explain-btn svg { width: 16px; height: 16px; }
+  .panel { position: relative; }
+
+  .modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+    z-index: 1000; justify-content: center; align-items: center; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #1e293b; border-radius: 16px; padding: 0;
+    max-width: 560px; width: 100%; max-height: 85vh; overflow: hidden;
+    border: 1px solid #334155; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: modalIn 0.25s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-header {
+    padding: 20px 24px 16px; border-bottom: 1px solid #334155;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-header h2 {
+    font-size: 18px; font-weight: 800; margin: 0;
+    background: linear-gradient(135deg, #6366f1, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .modal-close {
+    background: #334155; border: none; color: #94a3b8;
+    width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+    font-size: 18px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .modal-close:hover { background: #475569; color: #fff; }
+  .modal-body {
+    padding: 20px 24px 24px; overflow-y: auto; max-height: calc(85vh - 70px);
+  }
+  .modal-body p {
+    font-size: 15px; color: #cbd5e1; line-height: 1.8; margin-bottom: 14px;
+  }
+  .modal-body p:last-child { margin-bottom: 0; }
+  .modal-body .simple-highlight {
+    background: rgba(99,102,241,0.15); color: #a78bfa;
+    padding: 2px 8px; border-radius: 4px; font-weight: 600;
+  }
+  .modal-body .analogy {
+    background: #0f172a; border-radius: 10px; padding: 14px 16px;
+    border-left: 3px solid #8b5cf6; margin: 14px 0; font-size: 14px;
+    color: #94a3b8; line-height: 1.7;
+  }
+  .modal-body .analogy strong { color: #c4b5fd; }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .era-grid { grid-template-columns: 1fr; }
+    .forecast-cards { grid-template-columns: 1fr; }
+    .explain-btn { bottom: 12px; right: 12px; padding: 8px 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Copper Price: 30 Years of History & Future Outlook</h1>
+  <p class="subtitle">1996â2056 Â· Research, analysis & projections in USD per pound</p>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">1996 Price</div>
+      <div class="stat-value">$1.04/lb</div>
+      <div class="stat-sub">Starting point</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">2026 Price</div>
+      <div class="stat-value">$5.93/lb</div>
+      <div class="stat-sub">Current (Feb 2026)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">All-Time High</div>
+      <div class="stat-value">$6.14/lb</div>
+      <div class="stat-sub">Jan 2026</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">30yr Return</div>
+      <div class="stat-value">+470%</div>
+      <div class="stat-sub">5.7x increase</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('timeline')">Price Timeline</button>
+    <button class="tab" onclick="showTab('eras')">Market Eras</button>
+    <button class="tab" onclick="showTab('drivers')">Demand Drivers</button>
+    <button class="tab" onclick="showTab('intensity')">Copper Intensity</button>
+    <button class="tab" onclick="showTab('buyzones')">Buy Zones</button>
+    <button class="tab" onclick="showTab('forecast')">30yr Forecast</button>
+    <button class="tab" onclick="showTab('supply')">Supply Crisis</button>
+    <button class="tab" onclick="showTab('marketplace')">Buy Copper</button>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="panel" id="tab-timeline">
+    <div class="panel-title">Copper Price Timeline (1996â2026)</div>
+    <p class="panel-desc">Annotated markers show key events that moved the market. Hover for details.</p>
+    <div class="chart-wrap"><canvas id="timelineChart"></canvas></div>
+    <div class="events-legend">
+      <span class="event-tag"><b>1997</b> Asian Financial Crisis</span>
+      <span class="event-tag"><b>2001</b> China joins WTO</span>
+      <span class="event-tag"><b>2006</b> Supercycle peak</span>
+      <span class="event-tag"><b>2008</b> Global Financial Crisis</span>
+      <span class="event-tag"><b>2011</b> Post-stimulus high ($4.65)</span>
+      <span class="event-tag"><b>2016</b> China slowdown low</span>
+      <span class="event-tag"><b>2020</b> COVID crash & rebound</span>
+      <span class="event-tag"><b>2022</b> Ukraine war spike ($5.02)</span>
+      <span class="event-tag"><b>2026</b> All-time high ($6.14)</span>
+    </div>
+    <button class="explain-btn" onclick="openExplain('timeline')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+  </div>
+
+  <!-- ERAS -->
+  <div class="panel hidden" id="tab-eras">
+    <div class="panel-title">Market Eras: Average Price by Period</div>
+    <p class="panel-desc">Six distinct phases of the copper market over 30 years.</p>
+    <div class="chart-wrap" style="height:320px"><canvas id="erasChart"></canvas></div>
+    <div class="era-grid">
+      <div class="era-card" style="--era-color:#94a3b8">
+        <div class="era-name">Quiet Era</div><div class="era-years">1996â2002</div>
+        <div class="era-desc">Low, stable prices. Asian crisis dampened demand.</div>
+      </div>
+      <div class="era-card" style="--era-color:#f59e0b">
+        <div class="era-name">China Supercycle</div><div class="era-years">2003â2007</div>
+        <div class="era-desc">China's urbanization drove a 4x price increase.</div>
+      </div>
+      <div class="era-card" style="--era-color:#ef4444">
+        <div class="era-name">Crisis & Rebound</div><div class="era-years">2008â2011</div>
+        <div class="era-desc">69% crash, then stimulus drove record highs.</div>
+      </div>
+      <div class="era-card" style="--era-color:#8b5cf6">
+        <div class="era-name">Long Slide</div><div class="era-years">2012â2015</div>
+        <div class="era-desc">China's boom cooled. Multi-year decline.</div>
+      </div>
+      <div class="era-card" style="--era-color:#06b6d4">
+        <div class="era-name">Recovery</div><div class="era-years">2016â2019</div>
+        <div class="era-desc">Gradual climb. Supply tightened.</div>
+      </div>
+      <div class="era-card" style="--era-color:#22c55e">
+        <div class="era-name">Green Rally & New Era</div><div class="era-years">2020â2026</div>
+        <div class="era-desc">Energy transition + supply crunch = new highs.</div>
+      </div>
+    </div>
+    <button class="explain-btn" onclick="openExplain('eras')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+  </div>
+
+  <!-- DRIVERS -->
+  <div class="panel hidden" id="tab-drivers">
+    <div class="panel-title">Clean Energy Demand Growth (Annual %)</div>
+    <p class="panel-desc">Compound annual growth rate of copper consumption by sector.</p>
+    <div class="chart-wrap" style="height:320px"><canvas id="driversChart"></canvas></div>
+    <div class="info-box">
+      <h3>Why This Matters</h3>
+      <p>Overall energy-transition copper demand is growing at <span class="hl">10.7% annually</span>. EVs lead the charge at 14.3% CAGR, while AI data centers are emerging as a surprise demand driver. Global clean energy investment hit $1.8 trillion in 2023 and continues to accelerate.</p>
+    </div>
+    <button class="explain-btn" onclick="openExplain('drivers')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+  </div>
+
+  <!-- INTENSITY -->
+  <div class="panel hidden" id="tab-intensity">
+    <div class="panel-title">Copper Intensity: Clean vs. Fossil</div>
+    <p class="panel-desc">How much more copper clean energy technologies require compared to fossil fuel equivalents.</p>
+    <div class="bar-section">
+      <div class="bar-item">
+        <div class="bar-header">
+          <span>EV vs Gas Car</span>
+          <span style="color:#22c55e;font-weight:700">3.5x more copper</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-baseline" style="width:14.3%">1x</div>
+          <div class="bar-fill" style="width:50%;background:rgba(34,197,94,0.2);border:2px solid #22c55e;color:#22c55e">3.5x</div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-header">
+          <span>Solar vs Fossil</span>
+          <span style="color:#f59e0b;font-weight:700">5x more copper</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-baseline" style="width:14.3%">1x</div>
+          <div class="bar-fill" style="width:71.4%;background:rgba(245,158,11,0.2);border:2px solid #f59e0b;color:#f59e0b">5x</div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-header">
+          <span>Wind vs Fossil</span>
+          <span style="color:#06b6d4;font-weight:700">7x more copper</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-baseline" style="width:14.3%">1x</div>
+          <div class="bar-fill" style="width:100%;background:rgba(6,182,212,0.2);border:2px solid #06b6d4;color:#06b6d4">7x</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:28px">
+      <h3>The Supply Squeeze</h3>
+      <p>As the world shifts to clean energy, copper demand is structurally increasing â but new mines take <span class="hl-o">10â15 years</span> to develop. Chile and Peru face declining ore grades and labor disruptions. Most analysts forecast a widening supply deficit after 2025, with prices expected to stay in the <span class="hl-o">$4.80â$6.00/lb</span> range through 2026 and potentially beyond.</p>
+    </div>
+    <button class="explain-btn" onclick="openExplain('intensity')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+  </div>
+
+  <!-- BUY ZONES -->
+  <div class="panel hidden" id="tab-buyzones">
+    <div class="panel-title">Historical Buy Zones & Entry Price Analysis</div>
+    <p class="panel-desc">Based on 30 years of pullback patterns, here's where value buyers have historically found the best entries.</p>
+    <div class="chart-wrap" style="height:440px"><canvas id="buyZoneChart"></canvas></div>
+    <div class="zone-legend">
+      <div class="zone-item"><div class="zone-dot" style="background:#22c55e"></div><span style="color:#94a3b8">Strong Buy Zone (below $4.00)</span></div>
+      <div class="zone-item"><div class="zone-dot" style="background:#f59e0b"></div><span style="color:#94a3b8">Fair Value Zone ($4.00â$4.50)</span></div>
+      <div class="zone-item"><div class="zone-dot" style="background:#ef4444"></div><span style="color:#94a3b8">Premium Zone (above $5.50)</span></div>
+    </div>
+    <div class="info-box" style="margin-top:16px">
+      <h3>Entry Price Guidance</h3>
+      <p style="margin-bottom:12px"><span class="hl">Below $4.00/lb â Historically attractive.</span> Every major dip over the last five years (COVID crash, China lockdown fears, rate hike selloffs) has found buyers stepping in around $3.50â$4.00. Given the structural demand picture, it's getting harder for copper to stay below $4 for long.</p>
+      <p style="margin-bottom:12px"><span class="hl-y">$4.00â$4.50/lb â Fair value</span> relative to current fundamentals. Not cheap, not stretched. A reasonable accumulation range.</p>
+      <p style="margin-bottom:12px"><span class="hl-r">Above $5.50/lb â Premium territory.</span> You're paying for the forward story. Historically copper tends to correct after sharp runs above consensus. Current price (~$5.93) is in this zone.</p>
+      <p><span class="hl-c">Best strategy based on patterns:</span> Wait for pullbacks toward $4.50â$5.00 for a better margin of safety. These corrections have happened reliably, even within bull markets.</p>
+    </div>
+    <button class="explain-btn" onclick="openExplain('buyzones')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+  </div>
+
+  <!-- 30-YEAR FORECAST -->
+  <div class="panel hidden" id="tab-forecast">
+    <div class="panel-title">30-Year Price Projection (2026â2056)</div>
+    <p class="panel-desc">Based on historical cycle patterns, analyst forecasts, and structural demand modeling. Shaded area = projected range.</p>
+    <div class="chart-wrap" style="height:440px"><canvas id="forecastChart"></canvas></div>
+    <div class="forecast-cards">
+      <div class="forecast-card" style="border-top: 3px solid #22c55e;">
+        <div class="period">2026â2030</div>
+        <div class="range" style="color:#22c55e">$5â$8/lb</div>
+        <div class="detail">Supply peaks ~24Mt then declines. IEA warns of 30% deficit by 2035. Goldman targets $6.80/lb by 2035. Energy transition demand accelerates.</div>
+      </div>
+      <div class="forecast-card" style="border-top: 3px solid #f97316;">
+        <div class="period">2030â2040</div>
+        <div class="range" style="color:#f97316">$8â$12/lb</div>
+        <div class="detail">Severe supply squeeze. Demand could reach 42â77Mt. Production falls below 19Mt without massive investment. $270B investment gap. Some models project ~$11.78/lb by 2040.</div>
+      </div>
+      <div class="forecast-card" style="border-top: 3px solid #a78bfa;">
+        <div class="period">2040â2056</div>
+        <div class="range" style="color:#a78bfa">$8â$15/lb</div>
+        <div class="detail">Most speculative window. Demand could double to 50Mt+. Recycling & substitution may moderate prices. Structurally higher floor with familiar boom-bust cycles at elevated levels.</div>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:16px">
+      <h3>The Big Caveat</h3>
+      <p>Every 30-year commodity forecast in history has been wrong in the details. The <em>direction</em> tends to be right â copper has trended up over every 30-year window since industrialization. But recessions, copper substitutes, geopolitical shifts, or energy transition slowdowns could all change the picture. <span class="hl-o">The strongest signal: copper has never been cheaper 30 years later than it was at the start.</span></p>
+    </div>
+    <button class="explain-btn" onclick="openExplain('forecast')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+  </div>
+
+  <!-- SUPPLY CRISIS -->
+  <div class="panel hidden" id="tab-supply">
+    <div class="panel-title">The Coming Supply Crisis</div>
+    <p class="panel-desc">Why the IEA calls copper the most vulnerable critical mineral for the energy transition.</p>
+    <div class="chart-wrap" style="height:380px"><canvas id="supplyChart"></canvas></div>
+    <div style="margin-top:20px">
+      <div class="supply-bar">
+        <div class="supply-bar-label">
+          <span style="color:#94a3b8">IEA Deficit Scenario: Stated Policies (STEPS)</span>
+          <span class="hl-r">30% gap</span>
+        </div>
+        <div class="supply-bar-track">
+          <div class="supply-bar-fill" style="width:70%;background:linear-gradient(90deg,#22c55e,#22c55e)">Supply 70%</div>
+          <div style="position:absolute;top:0;right:0;width:30%;height:100%;background:rgba(239,68,68,0.25);border-radius:0 6px 6px 0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#ef4444">Deficit</div>
+        </div>
+      </div>
+      <div class="supply-bar">
+        <div class="supply-bar-label">
+          <span style="color:#94a3b8">Announced Pledges Scenario (APS)</span>
+          <span class="hl-r">35% gap</span>
+        </div>
+        <div class="supply-bar-track">
+          <div class="supply-bar-fill" style="width:65%;background:linear-gradient(90deg,#f59e0b,#f59e0b)">Supply 65%</div>
+          <div style="position:absolute;top:0;right:0;width:35%;height:100%;background:rgba(239,68,68,0.25);border-radius:0 6px 6px 0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#ef4444">Deficit</div>
+        </div>
+      </div>
+      <div class="supply-bar">
+        <div class="supply-bar-label">
+          <span style="color:#94a3b8">Net Zero Emissions Scenario (NZE)</span>
+          <span class="hl-r">40%+ gap</span>
+        </div>
+        <div class="supply-bar-track">
+          <div class="supply-bar-fill" style="width:58%;background:linear-gradient(90deg,#ef4444,#ef4444)">Supply 58%</div>
+          <div style="position:absolute;top:0;right:0;width:42%;height:100%;background:rgba(239,68,68,0.25);border-radius:0 6px 6px 0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#ef4444">Deficit</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:16px">
+      <h3>Key Supply Constraints</h3>
+      <p style="margin-bottom:10px"><span class="hl-o">17 years</span> â average time to bring a new copper mine online after discovery.</p>
+      <p style="margin-bottom:10px"><span class="hl-o">$270 billion</span> â the investment gap still needed to ensure adequate supply by 2030. Copper alone accounts for 36% of all critical mineral investment needs.</p>
+      <p style="margin-bottom:10px"><span class="hl-o">Declining ore grades</span> â Chile and Peru (top producers) are extracting lower-quality ore, meaning more energy and cost per pound of copper.</p>
+      <p><span class="hl-o">Peak production ~2028</span> â mined supply projected to peak at ~24Mt before falling to under 19Mt by 2035, while demand grows to 33Mt+.</p>
+    </div>
+    <button class="explain-btn" onclick="openExplain('supply')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+  </div>
+
+  <!-- MARKETPLACE -->
+  <div class="panel hidden" id="tab-marketplace">
+    <div class="panel-title">Where to Buy Copper</div>
+    <p class="panel-desc">Trusted marketplaces for purchasing physical copper, sorted by type.</p>
+    <div id="marketplace-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
+    </div>
+    <div class="info-box" style="margin-top:20px">
+      <h3>Buying Tips</h3>
+      <p style="margin-bottom:10px"><span class="hl">Physical copper</span> comes in bars, rounds, and bullion. It's heavy and has high shipping costs, so factor that in. Most buyers start with 1lb bars or rounds.</p>
+      <p style="margin-bottom:10px"><span class="hl-o">Spot price vs. premium:</span> You'll always pay above the "spot price" (the live market price). The extra cost is called the <strong style="color:#f1f5f9">premium</strong> â it covers minting, shipping, and dealer profit. Expect 20â80% premiums on small copper purchases.</p>
+      <p><span class="hl-c">Paper copper:</span> If you want exposure without holding physical metal, ETFs, futures, and mining stocks are options. These track the price more closely but you don't own actual copper.</p>
+    </div>
+    <button class="explain-btn" onclick="openExplain('marketplace')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+  </div>
+
+  <!-- SIMPLE EXPLAIN MODAL -->
+  <div class="modal-overlay" id="explainModal" onclick="if(event.target===this)closeExplain()">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Explain it Simply</h2>
+        <button class="modal-close" onclick="closeExplain()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <p class="footer">Data compiled from Macrotrends, Trading Economics, CME Group, Goldman Sachs, IEA, S&P Global, and analyst reports. Projections are estimates â not financial advice. Annual average prices (approximate). 2026 reflects YTD.</p>
+</div>
+
+<script>
+// Tab switching
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('tab-' + id).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Chart.js defaults
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = '#334155';
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+
+// === TIMELINE CHART ===
+const years = [1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
+const prices = [1.04,0.95,0.72,0.71,0.82,0.72,0.71,0.81,1.30,1.67,3.05,3.23,3.15,2.34,3.42,4.00,3.61,3.32,3.11,2.49,2.21,2.80,2.96,2.72,2.80,4.23,3.99,3.85,4.31,5.20,5.93];
+const eventYears = [1997,2001,2006,2008,2011,2016,2020,2022,2026];
+const eventLabels = {1997:'Asian Crisis',2001:'China WTO',2006:'Supercycle Peak',2008:'Financial Crisis',2011:'Stimulus High',2016:'China Slowdown',2020:'COVID',2022:'Ukraine War',2026:'ATH $6.14'};
+
+const eraColorMap = {
+  0:'#94a3b8',1:'#94a3b8',2:'#94a3b8',3:'#94a3b8',4:'#94a3b8',5:'#94a3b8',6:'#94a3b8',
+  7:'#f59e0b',8:'#f59e0b',9:'#f59e0b',10:'#f59e0b',11:'#f59e0b',
+  12:'#ef4444',13:'#fb923c',14:'#fb923c',15:'#fb923c',
+  16:'#8b5cf6',17:'#8b5cf6',18:'#8b5cf6',19:'#8b5cf6',
+  20:'#06b6d4',21:'#06b6d4',22:'#06b6d4',23:'#06b6d4',
+  24:'#22c55e',25:'#22c55e',26:'#22c55e',27:'#10b981',28:'#10b981',29:'#10b981',30:'#10b981'
+};
+
+new Chart(document.getElementById('timelineChart'), {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [{
+      data: prices, borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.1)',
+      fill: true, tension: 0.3, borderWidth: 2.5,
+      pointBackgroundColor: years.map((y,i) => eraColorMap[i]),
+      pointRadius: years.map(y => eventYears.includes(y) ? 7 : 3),
+      pointBorderColor: years.map(y => eventYears.includes(y) ? '#fff' : 'transparent'),
+      pointBorderWidth: years.map(y => eventYears.includes(y) ? 2 : 0),
+      pointHoverRadius: 8
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1e293b', borderColor: '#334155', borderWidth: 1,
+        titleColor: '#f1f5f9', bodyColor: '#f97316', cornerRadius: 8, padding: 12,
+        callbacks: {
+          title: ctx => { const yr = ctx[0].label; const ev = eventLabels[yr]; return ev ? yr+' â '+ev : yr; },
+          label: ctx => '$'+ctx.parsed.y.toFixed(2)+'/lb'
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxRotation: 45, font: { size: 11 } } },
+      y: { min: 0, max: 7, ticks: { callback: v => '$'+v, font: { size: 11 } }, grid: { color: '#1e293b' } }
+    }
+  }
+});
+
+// === ERAS CHART ===
+new Chart(document.getElementById('erasChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Quiet Era\n1996â02','China Supercycle\n2003â07','Crisis & Rebound\n2008â11','Long Slide\n2012â15','Recovery\n2016â19','Green Rally\n2020â26'],
+    datasets: [{
+      data: [0.82, 2.01, 3.23, 3.13, 2.67, 4.33],
+      backgroundColor: ['#94a3b8','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#22c55e'],
+      borderRadius: 6, barPercentage: 0.7
+    }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { backgroundColor: '#1e293b', borderColor: '#334155', borderWidth: 1, titleColor: '#f1f5f9', bodyColor: '#f97316', cornerRadius: 8, padding: 12, callbacks: { label: ctx => 'Avg: $'+ctx.parsed.x.toFixed(2)+'/lb' } }
+    },
+    scales: {
+      x: { min: 0, max: 5, ticks: { callback: v => '$'+v, font: { size: 11 } }, grid: { color: '#1e293b' } },
+      y: { ticks: { font: { size: 11 } }, grid: { display: false } }
+    }
+  }
+});
+
+// === DRIVERS CHART ===
+new Chart(document.getElementById('driversChart'), {
+  type: 'bar',
+  data: {
+    labels: ['EVs','AI Data Centers','Wind Power','Grid Modernization','Solar Power'],
+    datasets: [{
+      data: [14.3, 12.0, 9.3, 8.5, 5.6],
+      backgroundColor: ['#22c55e','#ef4444','#06b6d4','#8b5cf6','#f59e0b'],
+      borderRadius: 6, barPercentage: 0.65
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { backgroundColor: '#1e293b', borderColor: '#334155', borderWidth: 1, titleColor: '#f1f5f9', bodyColor: '#22c55e', cornerRadius: 8, padding: 12, callbacks: { label: ctx => ctx.parsed.y+'% CAGR' } }
+    },
+    scales: {
+      x: { ticks: { font: { size: 12 } }, grid: { display: false } },
+      y: { min: 0, max: 18, ticks: { callback: v => v+'%', font: { size: 11 } }, grid: { color: '#1e293b' } }
+    }
+  }
+});
+
+// === BUY ZONES CHART ===
+new Chart(document.getElementById('buyZoneChart'), {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [{
+      label: 'Copper Price',
+      data: prices, borderColor: '#f97316', backgroundColor: 'transparent',
+      tension: 0.3, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: '#f97316'
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1e293b', borderColor: '#334155', borderWidth: 1,
+        titleColor: '#f1f5f9', bodyColor: '#f97316', cornerRadius: 8, padding: 12,
+        callbacks: { label: ctx => '$'+ctx.parsed.y.toFixed(2)+'/lb' }
+      },
+      annotation: {
+        annotations: {
+          strongBuy: {
+            type: 'box', yMin: 0, yMax: 4.0,
+            backgroundColor: 'rgba(34,197,94,0.08)', borderColor: 'transparent',
+            label: { display: true, content: 'Strong Buy < $4.00', position: 'start', color: '#22c55e', font: { size: 11, weight: 'bold' }, padding: 4 }
+          },
+          fairValue: {
+            type: 'box', yMin: 4.0, yMax: 4.5,
+            backgroundColor: 'rgba(245,158,11,0.08)', borderColor: 'transparent',
+            label: { display: true, content: 'Fair Value $4.00â$4.50', position: 'start', color: '#f59e0b', font: { size: 11, weight: 'bold' }, padding: 4 }
+          },
+          premium: {
+            type: 'box', yMin: 5.5, yMax: 7,
+            backgroundColor: 'rgba(239,68,68,0.08)', borderColor: 'transparent',
+            label: { display: true, content: 'Premium > $5.50', position: 'start', color: '#ef4444', font: { size: 11, weight: 'bold' }, padding: 4 }
+          },
+          sweetSpot: {
+            type: 'box', yMin: 4.5, yMax: 5.0,
+            backgroundColor: 'rgba(6,182,212,0.08)', borderColor: 'rgba(6,182,212,0.3)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'Best Entry $4.50â$5.00', position: 'start', color: '#06b6d4', font: { size: 11, weight: 'bold' }, padding: 4 }
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxRotation: 45, font: { size: 11 } } },
+      y: { min: 0, max: 7, ticks: { callback: v => '$'+v, font: { size: 11 } }, grid: { color: '#1e293b' } }
+    }
+  }
+});
+
+// === 30-YEAR FORECAST CHART ===
+const forecastYears = [2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050,2052,2054,2056];
+const forecastMid =   [5.93, 6.50, 7.20, 8.00, 8.80, 9.50,10.20,11.00,11.50,11.80,12.20,12.50,13.00,13.50,14.00,14.50];
+const forecastHigh =  [5.93, 7.20, 8.50, 9.80,11.00,12.50,13.50,15.00,15.50,16.00,16.50,17.00,17.50,18.00,18.50,19.00];
+const forecastLow =   [5.93, 5.50, 5.00, 5.50, 6.00, 6.50, 7.00, 8.00, 8.50, 8.80, 9.00, 9.20, 9.50, 9.80,10.00,10.50];
+const historicalPart = [1.04,0.95,0.72,0.71,0.82,0.72,0.71,0.81,1.30,1.67,3.05,3.23,3.15,2.34,3.42,4.00,3.61,3.32,3.11,2.49,2.21,2.80,2.96,2.72,2.80,4.23,3.99,3.85,4.31,5.20,5.93];
+const allForecastYears = [...years, ...forecastYears.slice(1)];
+const midLine = [...new Array(years.length - 1).fill(null), ...forecastMid];
+const highLine = [...new Array(years.length - 1).fill(null), ...forecastHigh];
+const lowLine = [...new Array(years.length - 1).fill(null), ...forecastLow];
+const histLine = [...historicalPart, ...new Array(forecastYears.length - 1).fill(null)];
+
+new Chart(document.getElementById('forecastChart'), {
+  type: 'line',
+  data: {
+    labels: allForecastYears,
+    datasets: [
+      {
+        label: 'Historical', data: histLine,
+        borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.1)', fill: true,
+        tension: 0.3, borderWidth: 2.5, pointRadius: 2, pointBackgroundColor: '#f97316'
+      },
+      {
+        label: 'Bull Case', data: highLine,
+        borderColor: 'rgba(34,197,94,0.5)', backgroundColor: 'transparent',
+        borderDash: [5,5], tension: 0.3, borderWidth: 1.5, pointRadius: 0, fill: false
+      },
+      {
+        label: 'Base Case', data: midLine,
+        borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.1)',
+        tension: 0.3, borderWidth: 2.5, pointRadius: 2, pointBackgroundColor: '#22c55e', fill: '+1'
+      },
+      {
+        label: 'Bear Case', data: lowLine,
+        borderColor: 'rgba(239,68,68,0.5)', backgroundColor: 'transparent',
+        borderDash: [5,5], tension: 0.3, borderWidth: 1.5, pointRadius: 0, fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: { usePointStyle: true, padding: 16, font: { size: 11 } }
+      },
+      tooltip: {
+        backgroundColor: '#1e293b', borderColor: '#334155', borderWidth: 1,
+        titleColor: '#f1f5f9', bodyColor: '#94a3b8', cornerRadius: 8, padding: 12,
+        callbacks: { label: ctx => ctx.parsed.y !== null ? ctx.dataset.label+': $'+ctx.parsed.y.toFixed(2)+'/lb' : '' }
+      },
+      annotation: {
+        annotations: {
+          divider: {
+            type: 'line', xMin: '2026', xMax: '2026',
+            borderColor: '#475569', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'NOW', position: 'start', color: '#fbbf24', font: { size: 10, weight: 'bold' }, backgroundColor: 'rgba(15,23,42,0.8)', padding: 4 }
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxRotation: 45, font: { size: 10 } } },
+      y: { min: 0, max: 20, ticks: { callback: v => '$'+v, font: { size: 11 } }, grid: { color: '#1e293b' } }
+    }
+  }
+});
+
+// === MARKETPLACE ===
+const marketplaces = [
+  { name: 'JM Bullion', url: 'https://www.jmbullion.com/copper/', type: 'Physical Bullion', products: 'Bars, Rounds, Bullets', sizes: '1oz â 10lb', note: 'Established 2011. Free shipping over $199. Mint-guaranteed purity.', color: '#f59e0b', trust: 'A+ BBB' },
+  { name: 'APMEX', url: 'https://www.apmex.com/category/34001/copper-bullion', type: 'Physical Bullion', products: 'Bars, Rounds', sizes: '1oz â 100oz', note: '20+ years in business. Largest online dealer. Free shipping $199+.', color: '#22c55e', trust: 'A+ BBB' },
+  { name: 'SD Bullion', url: 'https://sdbullion.com/copper', type: 'Physical Bullion', products: 'Bars, Rounds', sizes: '1oz â 10lb', note: 'Competitive pricing. Insured discreet delivery. Low premiums.', color: '#06b6d4', trust: 'A+ BBB' },
+  { name: 'Money Metals', url: 'https://www.moneymetals.com/buy/copper', type: 'Physical Bullion', products: 'Bars, Rounds', sizes: '1oz â 1lb', note: 'Voted best US bullion dealer. Accepts crypto. Made in USA.', color: '#8b5cf6', trust: 'A+ BBB' },
+  { name: 'Hero Bullion', url: 'https://www.herobullion.com/copper/', type: 'Physical Bullion', products: 'Bars, Rounds, Bullets', sizes: '1oz â 5lb', note: 'Wide copper selection. Great for collectors. Fast shipping.', color: '#ef4444', trust: 'Trusted' },
+  { name: 'Provident Metals', url: 'https://www.providentmetals.com/copper.html', type: 'Physical Bullion', products: 'Bars, Rounds', sizes: '1oz â 10lb', note: 'Variety of designs and weights. Budget-friendly options.', color: '#f97316', trust: 'A+ BBB' },
+  { name: 'Bullion.com', url: 'https://www.bullion.com/copper', type: 'Physical Bullion', products: 'Bars, Rounds', sizes: '1oz â 10lb', note: 'Fair pricing. Secure shipping. Simple buying experience.', color: '#10b981', trust: 'Trusted' },
+  { name: 'eBay (Bullion Category)', url: 'https://www.ebay.com/b/Copper-Bullion-Bars-Rounds/139877/bn_7116637017', type: 'Marketplace', products: 'Bars, Rounds, Collectibles', sizes: 'Varies', note: 'Wide selection from many sellers. Use top-rated sellers only. Buyer protection included.', color: '#94a3b8', trust: 'Buyer Protection' }
+];
+
+const grid = document.getElementById('marketplace-grid');
+marketplaces.forEach(m => {
+  const card = document.createElement('a');
+  card.href = m.url; card.target = '_blank'; card.rel = 'noopener';
+  card.style.cssText = 'text-decoration:none;background:#0f172a;border-radius:10px;padding:16px;border:1px solid #334155;display:block;transition:all 0.2s;border-top:3px solid '+m.color;
+  card.onmouseenter = () => { card.style.borderColor = m.color; card.style.transform = 'translateY(-2px)'; };
+  card.onmouseleave = () => { card.style.borderColor = '#334155'; card.style.borderTopColor = m.color; card.style.transform = 'none'; };
+  card.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-size:15px;font-weight:700;color:#f1f5f9">${m.name}</span>
+      <span style="font-size:10px;background:${m.color}25;color:${m.color};padding:3px 8px;border-radius:20px;font-weight:600">${m.trust}</span>
+    </div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:6px">${m.type} &middot; ${m.products}</div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:8px">Sizes: ${m.sizes}</div>
+    <div style="font-size:12px;color:#94a3b8;line-height:1.5">${m.note}</div>
+    <div style="margin-top:10px;font-size:11px;color:${m.color};font-weight:600;display:flex;align-items:center;gap:4px">Visit Site <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/></svg></div>
+  `;
+  grid.appendChild(card);
+});
+
+// === SIMPLE EXPLANATIONS ===
+const simpleExplanations = {
+  timeline: {
+    title: 'The Price Chart â Simply Explained',
+    html: `
+      <p>Think of copper like the price of gas at the pump â it goes up and down based on what's happening in the world.</p>
+      <div class="analogy"><strong>Imagine a lemonade stand:</strong> If everyone on your street suddenly wants lemonade (high demand) but you only have 10 lemons (low supply), you can charge more. That's basically what happened to copper â over and over for 30 years.</div>
+      <p>This chart shows what one pound of copper cost each year. In <span class="simple-highlight">1996 it was about $1</span>. Today in <span class="simple-highlight">2026 it's about $6</span>. That means if you bought $100 of copper back then, it would be worth roughly $570 today.</p>
+      <p>The big dots on the chart mark moments when something major happened in the world â like a financial crisis that scared everyone into selling, or a country like China building so many cities that they needed mountains of copper.</p>
+      <p>The main takeaway: <span class="simple-highlight">copper has always gone up over time</span>, even though it bounces around a lot year to year.</p>
+    `
+  },
+  eras: {
+    title: 'The Market Eras â Simply Explained',
+    html: `
+      <p>Copper's 30-year story breaks into six chapters, kind of like seasons of a TV show:</p>
+      <div class="analogy"><strong>Season 1 (1996â2002):</strong> The quiet years. Copper was cheap â under $1/lb. Nobody was excited about it. Think of it as copper sitting on the clearance shelf.</div>
+      <div class="analogy"><strong>Season 2 (2003â2007):</strong> China starts building entire cities from scratch. Imagine the world's biggest construction project â they needed copper for every wire, pipe, and cable. Price went from $0.80 to $3+. This is like the blockbuster season.</div>
+      <div class="analogy"><strong>Season 3 (2008â2011):</strong> The drama season. The 2008 financial crisis tanked copper, then governments pumped trillions into the economy and copper shot to record highs. A rollercoaster.</div>
+      <div class="analogy"><strong>Season 4 (2012â2015):</strong> The hangover. China slowed down, the party was over. Prices slid back down. Think of it as the "boring but necessary" season.</div>
+      <div class="analogy"><strong>Season 5 (2016â2019):</strong> The slow comeback. Prices gradually climbed back up as the world stabilized.</div>
+      <div class="analogy"><strong>Season 6 (2020ânow):</strong> The reboot! Electric cars, solar panels, wind turbines â they all need tons of copper. This is the new exciting chapter, and prices are at all-time highs.</div>
+    `
+  },
+  drivers: {
+    title: 'Demand Drivers â Simply Explained',
+    html: `
+      <p>This chart shows <span class="simple-highlight">who's buying all the copper</span> and how fast their appetite is growing.</p>
+      <div class="analogy"><strong>Think of it this way:</strong> Imagine copper is pizza. For decades, the same group of people ordered pizza at a steady rate. Now suddenly five new groups show up, and they're ALL hungry â and their hunger is growing every year.</div>
+      <p><span class="simple-highlight">Electric vehicles (EVs)</span> are the hungriest â their copper appetite is growing 14.3% per year. An electric car uses about 4 times more copper than a gas car because of all the wiring in the battery, motor, and charger.</p>
+      <p><span class="simple-highlight">AI data centers</span> are a surprise newcomer â those massive buildings full of computers that power ChatGPT, Google, etc. all need enormous amounts of copper wiring.</p>
+      <p><span class="simple-highlight">Wind and solar power</span> need way more copper than old-school power plants. Same with upgrading the electric grid.</p>
+      <p>The bottom line: all these new uses are <strong style="color:#f1f5f9">stacking on top of</strong> the existing demand. The world isn't using <em>less</em> copper for regular stuff â it's using the same amount plus a whole lot more for green energy.</p>
+    `
+  },
+  intensity: {
+    title: 'Copper Intensity â Simply Explained',
+    html: `
+      <p>This page answers a simple question: <span class="simple-highlight">how much more copper do "green" things need compared to "old" things?</span></p>
+      <div class="analogy"><strong>Imagine building two houses.</strong> House A is a regular house with a gas furnace and gas stove. House B is all-electric â electric heat, solar panels on the roof, an EV charger in the garage. House B needs MUCH more copper wiring than House A. Now multiply that by millions of houses, cars, and power plants worldwide.</div>
+      <p>The bars show the multiplier:</p>
+      <p>An <span class="simple-highlight">electric car uses 3.5x more copper</span> than a regular car. A <span class="simple-highlight">solar farm uses 5x more copper</span> than a gas power plant. A <span class="simple-highlight">wind farm uses 7x more copper</span>.</p>
+      <p>This is why copper is sometimes called <strong style="color:#f1f5f9">"the metal of the future"</strong> â you literally can't build the clean energy future without it.</p>
+    `
+  },
+  buyzones: {
+    title: 'Buy Zones â Simply Explained',
+    html: `
+      <p>This is about <span class="simple-highlight">when copper is "on sale" vs. "overpriced"</span> based on historical patterns.</p>
+      <div class="analogy"><strong>Think of it like shopping for shoes.</strong> Your favorite sneakers retail for $150. Sometimes they go on sale for $90 â that's a great deal. Sometimes a hype drop pushes them to $250 on resale â that's expensive. The shoe is the same either way,but the price changes based on how badly people want them right now.</div>
+      <p>The colored zones on the chart work the same way:</p>
+      <p><span class="simple-highlight" style="background:rgba(34,197,94,0.15);color:#22c55e">Green zone (under $4)</span> = copper is on sale. Historically a great time to buy. These moments happen when everyone is panicking (COVID, financial crises, etc.).</p>
+      <p><span class="simple-highlight" style="background:rgba(245,158,11,0.15);color:#f59e0b">Yellow zone ($4â$4.50)</span> = fair price. You're paying what it's actually worth right now.</p>
+      <p><span class="simple-highlight" style="background:rgba(239,68,68,0.15);color:#ef4444">Red zone (above $5.50)</span> = expensive. The price is running hot. Right now copper is ~$5.93, which is in this zone.</p>
+      <p>The <span class="simple-highlight" style="background:rgba(6,182,212,0.15);color:#06b6d4">blue dashed zone ($4.50â$5.00)</span> is the "sweet spot" â if the price dips here, history says that's a solid entry point.</p>
+    `
+  },
+  forecast: {
+    title: '30-Year Forecast â Simply Explained',
+    html: `
+      <p>This chart is a <span class="simple-highlight">best guess about where copper prices might go</span> over the next 30 years.</p>
+      <div class="analogy"><strong>Think of it like weather forecasting.</strong> We can predict tomorrow's weather pretty well. Next week is decent. But 30 days out? It's more of a general "it'll probably be warm in July" kind of prediction. This forecast is similar â the further out you go, the fuzzier it gets.</div>
+      <p>The chart shows three lines after 2026:</p>
+      <p><span class="simple-highlight" style="background:rgba(34,197,94,0.15);color:#22c55e">Green line (Bull Case)</span> = things go really well for copper. Massive EV adoption, supply shortages, strong economy. Price could reach $15â$19/lb.</p>
+      <p><span class="simple-highlight">Middle line (Base Case)</span> = the most likely path. Steady growth driven by the energy transition. Reaches around $11â$14/lb by the 2040sâ2050s.</p>
+      <p><span class="simple-highlight" style="background:rgba(239,68,68,0.15);color:#ef4444">Red line (Bear Case)</span> = things go slower than expected. Recessions, someone invents a copper replacement, etc. Still ends higher than today â around $10/lb.</p>
+      <p>The key takeaway: <span class="simple-highlight">all three scenarios end much higher than today's price</span>. In 30 years, copper has never ended up cheaper than where it started.</p>
+    `
+  },
+  supply: {
+    title: 'Supply Crisis â Simply Explained',
+    html: `
+      <p>This page explains the <span class="simple-highlight">biggest reason people think copper prices will keep going up</span>: there literally won't be enoughÙ]Ü]Û\ÜÏH[[ÙÞHÝÛÏ[XYÚ[H[Ý\ÝÛ\ÈÛH^HÚÜÜÝÛÏ]Ø[XZÙHL^\ÈH^KÜYX\ËHÝÛ]HXÝ]L^\Ë]ÝÈHÝÛ\ÈÜÝÚ[È8 %]È[Z[Y\È[Ý[È[HÛÛYÙHÜ[YX\H8 %[ÝY[H[ÜHØ[LÌ^\ÈH^KH^HÚÜØ[Ý\Ý[Ý[HZ[HÙXÛÛÝ[[XÝ]ZÙ\ÈMÈYX\ÈÈZ[H]È^HÚÜÛHØÜ]ÚYX[Ú[KHÛÝ[\ÈÙ][ÈÛÜÝ][XZÚ[È]Ù\^\ÈXXÚYX\]	ÜÈHÛÜ\Ý\HÜ\Ú\ËÙ]HÜÚ\ÚÝÜÈÛÈ[\È[[È\\ZÙHØÚ\ÜÛÜÈ8 %Ü[Û\ÜÏHÚ[\KZYÚYÚÝ[OHÛÛÜÌÍMYH[X[ÛÚ[ÈTÜÜ[Ú[HÜ[Û\ÜÏHÚ[\KZYÚYÚÝ[OHÛÛÜÙY
+
+
+Ý\HÛÙ\ÈÕÓÜÜ[HØ\]ÙY[[H\ÈHÚÜYÙKÜH\È[ÝÈÚÝÈÝÈYHÚÜYÙHÛÝ[Ù]Ü[H\ÝØ\ÙKÙIÛHÜ[Û\ÜÏHÚ[\KZYÚYÚÝ[OHÛÛÜÙY
+
+
+Ì	HÚÜÜÜ[[HÛÜÝØ\ÙKÜ[Û\ÜÏHÚ[\KZYÚYÚÝ[OHÛÛÜÙY
+
+
+	JÈÚÜÜÜ[]	ÜÈZÙHYY[ÈL^\È]ÛH][È
+ÜÚ[ÛÛY][È\È[ÚÜYÙKHXÙHÛÙ\È\]	ÜÈXÛÛÛZXÜÈLK[]	ÜÈHÛÜHX\ÛÛ[[\ÝÈ[ÈÛÜ\Ú[H^[Ú]HÜHÛÈ[YKÜKX\Ù]XÙNÂ]N	Ð^Z[ÈÛÜ\8 %Ú[\H^Z[Y	Ë[Y[ÝHØ[ÈÜ[Û\ÜÏHÚ[\KZYÚYÚXÝX[HÝÛ\ÚXØ[ÛÜ\ÜÜ[[ÝH^H]Û[HÛHH[[ÛX[\8 %Ú[ÙZÙH^Z[ÈÛÛY][ÈÛH[X^Û]ÜY][ËÜ]Û\ÜÏH[[ÙÞHÝÛÏ\IÜÈÝÈ]ÛÜÜÎÜÝÛÏ[ÝHÛÈÈÛHÙ\ÙHÙXÚ]\ËXÚÈHÛÜ\\ÜÝ[
+HÛÚ[\Ú\YYXÙJK^HÚ]HÜY]Ø\Ü[È[Ù\[^HÚ\]È[Ý\ÛÜ[HÞ]	ÜÈ]Ú[\KÙ]Ü[Û\ÜÏHÚ[\KZYÚYÚÚ]\H[ÝHXÝX[H^Z[ÏÏÜÜ[ÛÜ\\È[Ý[ÈXYHÙNKIH\HÛÜ\^HÛÛYH[Y\[Ú^\È8 %ÛHHÚ[ÛHÝ[ÙH
+XÝ]HÙZYÚÙHPH]\JH\ÈL\Ý[\È
+ZÙHHÛX[XÚÊKÜÜ[Û\ÜÏHÚ[\KZYÚYÚÚ]	ÜÈH[Z][HÏÜÜ[H]HX\Ù]XÙHÙÛÜ\
+Ø[YHÜÝXÙHH\ÈXÝ]	
+KLËÛYÚÝË]Ú[[ÝH^HHÛX[ÛÜ\\[ÝIÛ^H[ÜH[]8 %X^XH	8 $ÉLÜHK\Ý[\H^HÛÜÝÛÝ\ÈXZÚ[ÈH\Ú\[È][HX[\ÜÈÙ]\ÈX\Ý\\ÈØ[YH[Z][K]	ÜÈÜX[ÜÜ[Û\ÜÏHÚ[\KZYÚYÚÈH]HÈÛ\ÚXØ[ÛÜ\ÏÜÜ[ÈH[ÝHØ[[ÛÈ[\Ý[ÛÜ\ÝYÚ[Ý\ÚÙ\YÙHXØÛÝ[\Ú[ÈUÈ
+ZÙHHÝØÚÈ]XÚÜÈHÛÜ\XÙJHÜH^Z[ÈÚ\\ÈÙÛÜ\Z[[ÈÛÛ\[Y\Ë\ÈØ^H[ÝHÙ]ÛÜ\^ÜÝ\HÚ]Ý]HX]HY][\Ú][È[[Ý\ÛÜÙ]Ü]Û\ÜÏH[[ÙÞHÝÛÏ]ZXÚÈ\ÜÝÛÏHÚ]\È\ÝY\H\H[Ù[ZÛÝÛ[\ÝYHH[[ÛÛÛ[][]KÝXÚÈÈ\ÙH]\[[ÛHÙ[\ËY^Z[ÈÛP^KÛH^HÛHÜ\]YÙ[\ÈÚ]Ý\Ø[ÈÙÜÚ]]H]Y]ÜËÙ]BNÂ[Ý[ÛÜ[^Z[XY
+HÂÛÛÝ]HHÚ[\Q^[][ÛÖÝXYNÂØÝ[Y[Ù][[Y[RY
+	Û[Ù[]IÊK^ÛÛ[H]K]NÂØÝ[Y[Ù][[Y[RY
+	Û[Ù[ÙIÊK[\SH]K[ÂØÝ[Y[Ù][[Y[RY
+	Ù^Z[[Ù[	ÊKÛ\ÜÓ\ÝY
+	ÜÚÝÉÊNÂØÝ[Y[ÙKÝ[KÝ\ÝÈH	ÚY[ÎÂB[Ý[ÛÛÜÙQ^Z[
+HÂØÝ[Y[Ù][[Y[RY
+	Ù^Z[[Ù[	ÊKÛ\ÜÓ\Ý[[ÝJ	ÜÚÝÉÊNÂØÝ[Y[ÙKÝ[KÝ\ÝÈH	ÉÎÂBØÝ[Y[Y][\Ý[\	ÚÙ^YÝÛËHOÈYKÙ^HOOH	Ñ\ØØ\IÊHÛÜÙQ^Z[
+NÈJNÂËÈOOHÕTHÈSPSÒTOOBÛÛÝÝ\VYX\ÈHÌÌÌÍWNÂÛÛÝÝ\HHÌËKKËKNKNÂÛÛÝ[X[HÌËKÌÌKKÌKÌËNÂ]ÈÚ\
+ØÝ[Y[Ù][[Y[RY
+	ÜÝ\PÚ\	ÊKÂ\N	Û[IË]NÂX[ÎÝ\VYX\Ë]\Ù]ÎÂÂX[	ÓZ[YÝ\H
+]
+IË]NÝ\KÜ\ÛÛÜ	ÈÙY
+
+
+	ËXÚÙÜÝ[ÛÛÜ	ÜØJÎK
+
+JIË[YK[Ú[ÛËÜ\ÚYKÚ[Y]\Î
+KÚ[XÚÙÜÝ[ÛÛÜ	ÈÙY
+
+
+	ËÚ[Ü\ÛÛÜ	ÈÙËÚ[Ü\ÚYKÂX[	ÔÚXÝY[X[
+]
+IË]N[X[Ü\ÛÛÜ	ÈÌÍMYIËXÚÙÜÝ[ÛÛÜ	ÜØJÍNMËMJIË[YK[Ú[ÛËÜ\ÚYKÚ[Y]\Î
+KÚ[XÚÙÜÝ[ÛÛÜ	ÈÌÍMYIËÚ[Ü\ÛÛÜ	ÈÙËÚ[Ü\ÚYBBKÜ[ÛÎÂ\ÜÛÚ]NYKXZ[Z[\ÜXÝ][Î[ÙKYÚ[ÎÂYÙ[ÈX[ÎÈ\ÙTÚ[Ý[NYKY[ÎMÛÈÚ^NLHHHKÛÛ\ÂXÚÙÜÝ[ÛÛÜ	ÈÌYLLØËÜ\ÛÛÜ	ÈÌÌÍMMIËÜ\ÚYK]PÛÛÜ	ÈÙYYIËÙPÛÛÜ	ÈÎMLØ	ËÛÜ\Y]\ÎY[ÎLØ[XÚÜÎÈX[ÝOÝ]\Ù]X[Ü]
+	Ê	ÊVÌK[J
+JÉÎ	ÊØÝ\ÙYJÉÈ]	ÈBBKØØ[\ÎÂÈÜYÈ\Ü^N[ÙHKXÚÜÎÈÛÈÚ^NLHHKNÈZ[MKX^ÍXÚÜÎÈØ[XÚÎOÉÓ]	ËÛÈÚ^NLHHKÜYÈÛÛÜ	ÈÌYLLØÈHBBBJNÂÜØÜ\ØÙOÚ[
