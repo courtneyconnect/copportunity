@@ -472,7 +472,7 @@
       <p style="margin-bottom:10px"><span class="hl-o">Spot price vs. premium:</span> You'll always pay above the "spot price" (the live market price). The extra cost is called the <strong style="color:#f1f5f9">premium</strong> â it covers minting, shipping, and dealer profit. Expect 20â80% premiums on small copper purchases.</p>
       <p><span class="hl-c">Paper copper:</span> If you want exposure without holding physical metal, ETFs, futures, and mining stocks are options. These track the price more closely but you don't own actual copper.</p>
     </div>
-    <button class="explain-btn" onclick="openExplain('marketplace')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
+    <button class="explain-btn" onclick="openExplain('marketplace')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Explain it Simply</button>
   </div>
 
   <!-- SIMPLE EXPLAIN MODAL -->
@@ -800,9 +800,9 @@ const simpleExplanations = {
     title: 'Buy Zones â Simply Explained',
     html: `
       <p>This is about <span class="simple-highlight">when copper is "on sale" vs. "overpriced"</span> based on historical patterns.</p>
-      <div class="analogy"><strong>Think of it like shopping for shoes.</strong> Your favorite sneakers retail for $150. Sometimes they go on sale for $90 â that's a great deal. Sometimes a hype drop pushes them to $250 on resale â that's expensive. The shoe is the same either way,but the price changes based on how badly people want them right now.</div>
+      <div class="analogy"><strong>Think of it like shopping for shoes.</strong> Your favorite sneakers retail for $150. Sometimes they go on sale for $90 â that's a great deal. Sometimes a hype drop pushes them to $250 on resale â that's expensive. The shoe is the same either way, but the price changes based on how badly people want them right now.</div>
       <p>The colored zones on the chart work the same way:</p>
-      <p><span class="simple-highlight" style="background:rgba(34,197,94,0.15);color:#22c55e">Green zone (under $4)</span> = copper is on sale. Historically a great time to buy. These moments happen when everyone is panicking (COVID, financial crises, etc.).</p>
+      <p><span class="simple-highligan class="simple-highlight" style="background:rgba(34,197,94,0.15);color:#22c55e">Green zone (under $4)</span> = copper is on sale. Historically a great time to buy. These moments happen when everyone is panicking (COVID, financial crises, etc.).</p>
       <p><span class="simple-highlight" style="background:rgba(245,158,11,0.15);color:#f59e0b">Yellow zone ($4â$4.50)</span> = fair price. You're paying what it's actually worth right now.</p>
       <p><span class="simple-highlight" style="background:rgba(239,68,68,0.15);color:#ef4444">Red zone (above $5.50)</span> = expensive. The price is running hot. Right now copper is ~$5.93, which is in this zone.</p>
       <p>The <span class="simple-highlight" style="background:rgba(6,182,212,0.15);color:#06b6d4">blue dashed zone ($4.50â$5.00)</span> is the "sweet spot" â if the price dips here, history says that's a solid entry point.</p>
@@ -823,46 +823,80 @@ const simpleExplanations = {
   supply: {
     title: 'Supply Crisis â Simply Explained',
     html: `
-      <p>This page explains the <span class="simple-highlight">biggest reason people think copper prices will keep going up</span>: there literally won't be enoughÙ]Ü]Û\ÜÏH[[ÙÞHÝÛÏ[XYÚ[H[Ý\ÝÛ\ÈÛH^HÚÜÜÝÛÏ]Ø[XZÙHL^\ÈH^KÜYX\ËHÝÛ]HXÝ]L^\Ë]ÝÈHÝÛ\ÈÜÝÚ[È8 %]È[Z[Y\È[Ý[È[HÛÛYÙHÜ[YX\H8 %[ÝY[H[ÜHØ[LÌ^\ÈH^KH^HÚÜØ[Ý\Ý[Ý[HZ[HÙXÛÛÝ[[XÝ]ZÙ\ÈMÈYX\ÈÈZ[H]È^HÚÜÛHØÜ]ÚYX[Ú[KHÛÝ[\ÈÙ][ÈÛÜÝ][XZÚ[È]Ù\^\ÈXXÚYX\]	ÜÈHÛÜ\Ý\HÜ\Ú\ËÙ]HÜÚ\ÚÝÜÈÛÈ[\È[[È\\ZÙHØÚ\ÜÛÜÈ8 %Ü[Û\ÜÏHÚ[\KZYÚYÚÝ[OHÛÛÜÌÍMYH[X[ÛÚ[ÈTÜÜ[Ú[HÜ[Û\ÜÏHÚ[\KZYÚYÚÝ[OHÛÛÜÙY
+      <p>This page explains the <span class="simple-highlight">biggest reason people think copper prices will keep going up</span>: there literally won't be enough of it.</p>
+      <div class="analogy"><strong>Imagine your town has one pizza shop.</strong> It can make 100 pizzas a day. For years, the town ate about 100 pizzas. But now the town is growing â new families moving in, a college opened nearby â and suddenly people want 130 pizzas a day. The pizza shop can't just instantly build a second oven. In fact, it takes 17 years to build a new pizza shop from scratch. Meanwhile, the old oven is getting worn out and making fewer pizzas each year. That's the copper supply crisis.</div>
+      <p>The top chart shows two lines pulling apart like scissors â <span class="simple-highlight" style="color:#22c55e">demand going UP</span> while <span class="simple-highlight" style="color:#ef4444">supply goes DOWN</span>. The gap between them is the shortage.</p>
+      <p>The bars below show how bad the shortage could get:</p>
+      <p>In the best case, we'll be <span class="simple-highlight" style="color:#ef4444">30% short</span>. In the worst case, <span class="simple-highlight" style="color:#ef4444">40%+ short</span>. That's like needing 100 pizzas but only having 60.</p>
+      <p>When something is in shortage, the price goes up. That's Economics 101, and it's the core reason analysts think copper will be expensive for a long time.</p>
+    `
+  },
+  marketplace: {
+    title: 'Buying Copper â Simply Explained',
+    html: `
+      <p>If you want to <span class="simple-highlight">actually own physical copper</span>, you buy it online from a bullion dealer â kind of like buying something from Amazon, but for metals.</p>
+      <div class="analogy"><strong>Here's how it works:</strong> You go to one of these websites, pick a copper bar or round (a coin-shaped piece), pay with a credit card or bank transfer, and they ship it to your door in a box. It's that simple.</div>
+      <p><span class="simple-highlight">What are you actually buying?</span> Copper bars and rounds made of 99.9% pure copper. They come in different sizes â from a single ounce (about the weight of a AA battery) up to 10-pound bars (like a small brick).</p>
+      <p><span class="simple-highlight">What's a "premium"?</span> The live market price of copper (called the "spot price") is about $5.93/lb right now. But when you buy a small copper bar, you'll pay more than that â maybe $8â$12 for a 1-pound bar. The extra cost covers making the bar, shipping it, and the dealer's profit. This markup is called the "premium." It's normal.</p>
+      <p><span class="simple-highlight">Do I have to hold physical copper?</span> No! You can also invest in copper through your brokerage account using ETFs (like a stock that tracks the copper price) or by buying shares of copper mining companies. This way you get copper exposure without a heavy metal bar sitting in your closet.</p>
+      <div class="analogy"><strong>Quick tip:</strong> The sites listed here are all well-known and trusted by the bullion community. Stick to these rather than random sellers. If buying on eBay, only buy from top-rated sellers with thousands of positive reviews.</div>
+    `
+  }
+};
 
+function openExplain(tabId) {
+  const data = simpleExplanations[tabId];
+  document.getElementById('modalTitle').textContent = data.title;
+  document.getElementById('modalBody').innerHTML = data.html;
+  document.getElementById('explainModal').classLiss.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeExplain() {
+  document.getElementById('explainModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeExplain(); });
 
-Ý\HÛÙ\ÈÕÓÜÜ[HØ\]ÙY[[H\ÈHÚÜYÙKÜH\È[ÝÈÚÝÈÝÈYHÚÜYÙHÛÝ[Ù]Ü[H\ÝØ\ÙKÙIÛHÜ[Û\ÜÏHÚ[\KZYÚYÚÝ[OHÛÛÜÙY
+// === SUPPLY vs DEMAND CHART ===
+const supplyYears = [2024,2026,2028,2030,2032,2035];
+const supply = [27, 25.5, 24.0, 23.0, 20.5, 19.0];
+const demand = [27, 28.5, 30.0, 31.5, 32.5, 33.0];
 
-
-Ì	HÚÜÜÜ[[HÛÜÝØ\ÙKÜ[Û\ÜÏHÚ[\KZYÚYÚÝ[OHÛÛÜÙY
-
-
-	JÈÚÜÜÜ[]	ÜÈZÙHYY[ÈL^\È]ÛH][È
-ÜÚ[ÛÛY][È\È[ÚÜYÙKHXÙHÛÙ\È\]	ÜÈXÛÛÛZXÜÈLK[]	ÜÈHÛÜHX\ÛÛ[[\ÝÈ[ÈÛÜ\Ú[H^[Ú]HÜHÛÈ[YKÜKX\Ù]XÙNÂ]N	Ð^Z[ÈÛÜ\8 %Ú[\H^Z[Y	Ë[Y[ÝHØ[ÈÜ[Û\ÜÏHÚ[\KZYÚYÚXÝX[HÝÛ\ÚXØ[ÛÜ\ÜÜ[[ÝH^H]Û[HÛHH[[ÛX[\8 %Ú[ÙZÙH^Z[ÈÛÛY][ÈÛH[X^Û]ÜY][ËÜ]Û\ÜÏH[[ÙÞHÝÛÏ\IÜÈÝÈ]ÛÜÜÎÜÝÛÏ[ÝHÛÈÈÛHÙ\ÙHÙXÚ]\ËXÚÈHÛÜ\\ÜÝ[
-HÛÚ[\Ú\YYXÙJK^HÚ]HÜY]Ø\Ü[È[Ù\[^HÚ\]È[Ý\ÛÜ[HÞ]	ÜÈ]Ú[\KÙ]Ü[Û\ÜÏHÚ[\KZYÚYÚÚ]\H[ÝHXÝX[H^Z[ÏÏÜÜ[ÛÜ\\È[Ý[ÈXYHÙNKIH\HÛÜ\^HÛÛYH[Y\[Ú^\È8 %ÛHHÚ[ÛHÝ[ÙH
-XÝ]HÙZYÚÙHPH]\JH\ÈL\Ý[\È
-ZÙHHÛX[XÚÊKÜÜ[Û\ÜÏHÚ[\KZYÚYÚÚ]	ÜÈH[Z][HÏÜÜ[H]HX\Ù]XÙHÙÛÜ\
-Ø[YHÜÝXÙHH\ÈXÝ]	
-KLËÛYÚÝË]Ú[[ÝH^HHÛX[ÛÜ\\[ÝIÛ^H[ÜH[]8 %X^XH	8 $ÉLÜHK\Ý[\H^HÛÜÝÛÝ\ÈXZÚ[ÈH\Ú\[È][HX[\ÜÈÙ]\ÈX\Ý\\ÈØ[YH[Z][K]	ÜÈÜX[ÜÜ[Û\ÜÏHÚ[\KZYÚYÚÈH]HÈÛ\ÚXØ[ÛÜ\ÏÜÜ[ÈH[ÝHØ[[ÛÈ[\Ý[ÛÜ\ÝYÚ[Ý\ÚÙ\YÙHXØÛÝ[\Ú[ÈUÈ
-ZÙHHÝØÚÈ]XÚÜÈHÛÜ\XÙJHÜH^Z[ÈÚ\\ÈÙÛÜ\Z[[ÈÛÛ\[Y\Ë\ÈØ^H[ÝHÙ]ÛÜ\^ÜÝ\HÚ]Ý]HX]HY][\Ú][È[[Ý\ÛÜÙ]Ü]Û\ÜÏH[[ÙÞHÝÛÏ]ZXÚÈ\ÜÝÛÏHÚ]\È\ÝY\H\H[Ù[ZÛÝÛ[\ÝYHH[[ÛÛÛ[][]KÝXÚÈÈ\ÙH]\[[ÛHÙ[\ËY^Z[ÈÛP^KÛH^HÛHÜ\]YÙ[\ÈÚ]Ý\Ø[ÈÙÜÚ]]H]Y]ÜËÙ]BNÂ[Ý[ÛÜ[^Z[XY
-HÂÛÛÝ]HHÚ[\Q^[][ÛÖÝXYNÂØÝ[Y[Ù][[Y[RY
-	Û[Ù[]IÊK^ÛÛ[H]K]NÂØÝ[Y[Ù][[Y[RY
-	Û[Ù[ÙIÊK[\SH]K[ÂØÝ[Y[Ù][[Y[RY
-	Ù^Z[[Ù[	ÊKÛ\ÜÓ\ÝY
-	ÜÚÝÉÊNÂØÝ[Y[ÙKÝ[KÝ\ÝÈH	ÚY[ÎÂB[Ý[ÛÛÜÙQ^Z[
-HÂØÝ[Y[Ù][[Y[RY
-	Ù^Z[[Ù[	ÊKÛ\ÜÓ\Ý[[ÝJ	ÜÚÝÉÊNÂØÝ[Y[ÙKÝ[KÝ\ÝÈH	ÉÎÂBØÝ[Y[Y][\Ý[\	ÚÙ^YÝÛËHOÈYKÙ^HOOH	Ñ\ØØ\IÊHÛÜÙQ^Z[
-NÈJNÂËÈOOHÕTHÈSPSÒTOOBÛÛÝÝ\VYX\ÈHÌÌÌÍWNÂÛÛÝÝ\HHÌËKKËKNKNÂÛÛÝ[X[HÌËKÌÌKKÌKÌËNÂ]ÈÚ\
-ØÝ[Y[Ù][[Y[RY
-	ÜÝ\PÚ\	ÊKÂ\N	Û[IË]NÂX[ÎÝ\VYX\Ë]\Ù]ÎÂÂX[	ÓZ[YÝ\H
-]
-IË]NÝ\KÜ\ÛÛÜ	ÈÙY
-
-
-	ËXÚÙÜÝ[ÛÛÜ	ÜØJÎK
-
-JIË[YK[Ú[ÛËÜ\ÚYKÚ[Y]\Î
-KÚ[XÚÙÜÝ[ÛÛÜ	ÈÙY
-
-
-	ËÚ[Ü\ÛÛÜ	ÈÙËÚ[Ü\ÚYKÂX[	ÔÚXÝY[X[
-]
-IË]N[X[Ü\ÛÛÜ	ÈÌÍMYIËXÚÙÜÝ[ÛÛÜ	ÜØJÍNMËMJIË[YK[Ú[ÛËÜ\ÚYKÚ[Y]\Î
-KÚ[XÚÙÜÝ[ÛÛÜ	ÈÌÍMYIËÚ[Ü\ÛÛÜ	ÈÙËÚ[Ü\ÚYBBKÜ[ÛÎÂ\ÜÛÚ]NYKXZ[Z[\ÜXÝ][Î[ÙKYÚ[ÎÂYÙ[ÈX[ÎÈ\ÙTÚ[Ý[NYKY[ÎMÛÈÚ^NLHHHKÛÛ\ÂXÚÙÜÝ[ÛÛÜ	ÈÌYLLØËÜ\ÛÛÜ	ÈÌÌÍMMIËÜ\ÚYK]PÛÛÜ	ÈÙYYIËÙPÛÛÜ	ÈÎMLØ	ËÛÜ\Y]\ÎY[ÎLØ[XÚÜÎÈX[ÝOÝ]\Ù]X[Ü]
-	Ê	ÊVÌK[J
-JÉÎ	ÊØÝ\ÙYJÉÈ]	ÈBBKØØ[\ÎÂÈÜYÈ\Ü^N[ÙHKXÚÜÎÈÛÈÚ^NLHHKNÈZ[MKX^ÍXÚÜÎÈØ[XÚÎOÉÓ]	ËÛÈÚ^NLHHKÜYÈÛÛÜ	ÈÌYLLØÈHBBBJNÂÜØÜ\ØÙOÚ[
+new Chart(document.getElementById('supplyChart'), {
+  type: 'line',
+  data: {
+    labels: supplyYears,
+    datasets: [
+      {
+        label: 'Mined Supply (Mt)', data: supply,
+        borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)',
+        fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 5,
+        pointBackgroundColor: '#ef4444', pointBorderColor: '#fff', pointBorderWidth: 2
+      },
+      {
+        label: 'Projected Demand (Mt)', data: demand,
+        borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.1)',
+        fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 5,
+        pointBackgroundColor: '#22c55e', pointBorderColor: '#fff', pointBorderWidth: 2
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { usePointStyle: true, padding: 16, font: { size: 11 } } },
+      tooltip: {
+        backgroundColor: '#1e293b', borderColor: '#334155', borderWidth: 1,
+        titleColor: '#f1f5f9', bodyColor: '#94a3b8', cornerRadius: 8, padding: 12,
+        callbacks: { label: ctx => ctx.dataset.label.split('(')[0].trim()+': '+ctx.parsed.y+' Mt' }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+      y: { min: 15, max: 36, ticks: { callback: v => v+'Mt', font: { size: 11 } }, grid: { color: '#1e293b' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
